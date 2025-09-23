@@ -17,13 +17,6 @@ function App() {
     return () => window.removeEventListener("popstate", onPopState);
   }, []);
 
-  const navigate = (path) => {
-    if (window.location.pathname !== path) {
-      window.history.pushState({}, "", path);
-      setRoute(path);
-    }
-  };
-
   const isForm = route === "/form";
 
   return (
