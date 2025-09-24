@@ -86,7 +86,7 @@ export function ContactForm() {
     params.append("timestamp", timestamp);
 
     try {
-      const baseUrl = "/webhook/update-status";
+      const baseUrl = "/webhook/React-Contact-Form";
 
       params.append("_ts", String(Date.now()));
       params.append("ngrok-skip-browser-warning", "1");
