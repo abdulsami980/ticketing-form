@@ -76,33 +76,25 @@ export function ContactForm() {
 
     const params = new URLSearchParams();
     Object.entries(data || {}).forEach(([key, value]) => {
-      if (typeof value === "string") {
-        params.append(key, value);
-      } else {
-        params.append(key, value == null ? "" : String(value));
-      }
+      params.append(key, value ?? "");
     });
-
     params.append("timestamp", timestamp);
+    params.append("_ts", String(Date.now()));
 
     try {
-      const baseUrl = "/n8n/webhook/React-Contact-Form";
+      // Use proxy in dev, direct URL in prod
+      const baseUrl = import.meta.env.DEV
+        ? "/n8n/webhook/React-Contact-Form"
+        : "https://7af7d8dc9fe5.ngrok-free.app/webhook/React-Contact-Form";
 
-      params.append("_ts", String(Date.now()));
-      params.append("ngrok-skip-browser-warning", "1");
       const url = `${baseUrl}?${params.toString()}`;
-
       const response = await fetch(url, { method: "GET" });
 
-      if (!response.ok) {
-        const errorText = await response.text().catch(() => "");
-        throw new Error(errorText || `Request failed with ${response.status}`);
-      }
+      if (!response.ok) throw new Error(`Request failed: ${response.status}`);
 
       toast.success("Data sent successfully to n8n");
     } catch (error) {
-      const message = error instanceof Error ? error.message : String(error);
-      toast.error(`Error sending data: ${message}`);
+      toast.error(`Error sending data: ${error.message}`);
     }
   };
 
