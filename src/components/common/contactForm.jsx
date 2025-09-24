@@ -88,11 +88,15 @@ export function ContactForm() {
         : "https://7af7d8dc9fe5.ngrok-free.app/webhook/React-Contact-Form";
 
       const url = `${baseUrl}?${params.toString()}`;
-      const response = await fetch(url, { method: "GET" });
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          "ngrok-skip-browser-warning": "1",
+        },
+      });
 
       if (!response.ok) throw new Error(`Request failed: ${response.status}`);
-
-      toast.success("Data sent successfully to n8n");
+      toast.success("Work Flow Has Started!");
     } catch (error) {
       toast.error(`Error sending data: ${error.message}`);
     }
