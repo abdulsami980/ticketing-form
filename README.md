@@ -120,7 +120,7 @@ Usage example (see `src/App.jsx`):
 
 ### TextType (Typed Headline)
 
-Path: `src/components/ui/TyprText.jsx`
+Path: `src/components/ui/TypeText.jsx`
 
 Selected props:
 
@@ -164,7 +164,7 @@ src/
       contactForm.jsx     # Validated contact form with webhook submit
     ui/
       Galaxy.jsx          # WebGL galaxy background
-      TyprText.jsx        # Typed text with blinking cursor
+      TypeText.jsx        # Typed text with blinking cursor
       form/               # Form primitives
       button/             # Button component
 ```

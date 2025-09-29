@@ -69,9 +69,9 @@ export function ContactForm() {
     const pad2 = (n) => String(n).padStart(2, "0");
     const now = new Date();
     const timestamp = `${pad2(now.getDate())}/${pad2(
-      now.getMonth() + 1
+      now.getMonth() + 1,
     )}/${now.getFullYear()} ${pad2(now.getHours())}:${pad2(
-      now.getMinutes()
+      now.getMinutes(),
     )}:${pad2(now.getSeconds())}`;
 
     const params = new URLSearchParams();
@@ -85,7 +85,7 @@ export function ContactForm() {
       // Use proxy in dev, direct URL in prod
       const baseUrl = import.meta.env.DEV
         ? "/n8n/webhook/React-Contact-Form"
-        : "https://c7349e451101.ngrok-free.app/webhook/React-Contact-Form";
+        : "https://9452be38d7f5.ngrok-free.app/webhook/React-Contact-Form";
 
       const url = `${baseUrl}?${params.toString()}`;
       const response = await fetch(url, {

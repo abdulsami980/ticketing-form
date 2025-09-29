@@ -1,10 +1,10 @@
 // App.jsx
 
 import { ContactForm } from "@/components/common/contactForm";
+import { useEffect, useState } from "react";
 import { Toaster } from "sonner";
 import Galaxy from "./components/ui/Galaxy";
-import TextType from "./components/ui/TyprText";
-import { useEffect, useState } from "react";
+import TextType from "./components/ui/TypeText";
 
 function App() {
   const [route, setRoute] = useState(
@@ -30,6 +30,7 @@ function App() {
           saturation={0.8}
           glowIntensity={0.35}
         />
+
         <Toaster richColors position="top-right" />
         <div className="relative z-10 flex min-h-screen items-center justify-center p-6 text-foreground">
           {isForm ? (
