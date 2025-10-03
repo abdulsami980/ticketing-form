@@ -1,10 +1,10 @@
 // App.jsx
-
-import { ContactForm } from "@/components/common/contactForm";
+import { JobApplicationForm } from "@/components/common/JobApplicationForm";
 import { useEffect, useState } from "react";
 import { Toaster } from "sonner";
-import Galaxy from "./components/ui/Galaxy";
-import TextType from "./components/ui/TypeText";
+import { JobPostingForm } from "./components/common/JobPostingForm";
+import { Button } from "./components/ui/button/button";
+import DarkVeil from "./components/ui/DarkVeil";
 
 function App() {
   const [route, setRoute] = useState(
@@ -17,91 +17,80 @@ function App() {
     return () => window.removeEventListener("popstate", onPopState);
   }, []);
 
-  const isForm = route === "/form";
+  const navigate = (path) => {
+    window.history.pushState({}, "", path);
+    setRoute(path);
+  };
+
+  const isApplicationForm = route === "/job-application-form";
+  const postAJobForm = route === "/post-a-job-form";
 
   return (
     <>
       <div className="dark min-h-screen relative overflow-hidden">
-        <Galaxy
-          className="absolute inset-0 -z-10"
-          transparent={false}
-          density={1.2}
-          hueShift={200}
-          saturation={0.8}
-          glowIntensity={0.35}
-        />
-
+        {/* Background */}
+        <div className="absolute inset-0 -z-99">
+          <DarkVeil />
+        </div>
         <Toaster richColors position="top-right" />
         <div className="relative z-10 flex min-h-screen items-center justify-center p-6 text-foreground">
-          {isForm ? (
+          {isApplicationForm ? (
             <div
-              className="w-full max-w-md rounded-xl border bg-card/80 backdrop-blur-md shadow-lg"
+              className="w-full max-w-md rounded-2xl border bg-card/80 backdrop-blur-md shadow-2xl"
               data-block-galaxy="true"
             >
               <div className="p-6">
-                <div className="mb-3 font-semibold">
-                  <TextType
-                    text={[
-                      "Need Help?",
-                      "Drop a Message!",
-                      "Have a Question?",
-                      "Ask a Query!",
-                      "Share Your Feedback!",
-                      "What’s on Your Mind?",
-                      "Generate a Ticket!",
-                      "Looking for Support?",
-                      "Contact Us!",
-                      "Want Quick Assistance?",
-                      "We’re Listening!",
-                      "How Can We Help?",
-                      "Submit Your Question!",
-                      "Reach Our Team!",
-                      "Got an Issue?",
-                      "Connect With Us!",
-                      "Any Queries?",
-                      "Facing a Problem?",
-                      "Need Some Guidance?",
-                      "Trouble with Something?",
-                    ]}
-                    typingSpeed={70}
-                    pauseDuration={1500}
-                    showCursor={true}
-                    cursorCharacter="_"
-                    className="text-2xl"
-                    cursorBlinkDuration={0.2}
-                  />
-                </div>
-                <ContactForm />
+                <JobApplicationForm />
+              </div>
+            </div>
+          ) : postAJobForm ? (
+            <div
+              className="w-full max-w-md rounded-2xl border bg-card/80 backdrop-blur-md shadow-2xl"
+              data-block-galaxy="true"
+            >
+              <div className="p-6">
+                <JobPostingForm />
               </div>
             </div>
           ) : (
             <div
-              className="w-full max-w-xl rounded-xl border bg-card/80 backdrop-blur-md shadow-lg p-8 text-center"
+              className="w-full max-w-3xl text-center rounded-2xl border bg-card/40 backdrop-blur-md shadow-2xl p-10"
               data-block-galaxy="true"
             >
-              <h1 className="text-3xl font-bold mb-2">Stay Tuned!</h1>
+              {/* Hero Section */}
+              <h1 className="text-4xl md:text-6xl font-extrabold bg-gradient-to-r from-[#5227FF] via-[#FF9FFC] to-[#B19EEF] bg-clip-text text-transparent mb-6">
+                AI-Powered Recruitment
+              </h1>
+              <p className="text-lg md:text-xl text-muted-foreground mb-8 leading-relaxed">
+                🚀 Smart Screening & Notifications — automate applicant
+                filtering, enrich profiles, and keep recruiters & candidates
+                updated in real time.
+              </p>
 
-              <TextType
-                text={[
-                  "Crafting something special",
-                  "Building with precision",
-                  "Innovation in progress",
-                  "Preparing the magic",
-                  "Code is brewing",
-                  "Smart solutions on the way",
-                  "Engineering the experience",
-                  "Future-ready, almost here",
-                  "Making technology human",
-                  "Innovation doesn’t rush",
-                  "Something intelligent is coming",
-                ]}
-                typingSpeed={70}
-                pauseDuration={1500}
-                showCursor={true}
-                cursorCharacter="_"
-                className="text-2xl"
-                cursorBlinkDuration={0.2}
-              />
+              {/* CTA Buttons */}
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Button
+                  onClick={() => navigate("/job-application-form")}
+                  size="lg"
+                  className="px-8 py-6 text-lg rounded-xl shadow-lg"
+                >
+                  Apply on Job
+                </Button>
+                <Button
+                  variant="outline"
+                  size="lg"
+                  onClick={() => navigate("/post-a-job-form")}
+                  className="px-8 py-6 text-lg rounded-xl"
+                >
+                  Post a Job
+                </Button>
+              </div>
+
+              {/* Footer-like tagline */}
+              <p className="mt-10 text-sm text-muted-foreground">
+                Transform your hiring with automation · Faster · Smarter ·
+                Seamless
+              </p>
             </div>
           )}
         </div>

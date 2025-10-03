@@ -49,7 +49,7 @@ const formSchema = z.object({
   summary: z.string().optional().or(z.literal("")),
 });
 
-export function ContactForm() {
+export function JobPostingForm() {
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -69,9 +69,9 @@ export function ContactForm() {
     const pad2 = (n) => String(n).padStart(2, "0");
     const now = new Date();
     const timestamp = `${pad2(now.getDate())}/${pad2(
-      now.getMonth() + 1,
+      now.getMonth() + 1
     )}/${now.getFullYear()} ${pad2(now.getHours())}:${pad2(
-      now.getMinutes(),
+      now.getMinutes()
     )}:${pad2(now.getSeconds())}`;
 
     const params = new URLSearchParams();
@@ -184,59 +184,6 @@ export function ContactForm() {
                     <SelectItem value="Admin">Admin</SelectItem>
                   </SelectContent>
                 </Select>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        {/* Request Type */}
-        <FormField
-          control={form.control}
-          name="request_type"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Request Type</FormLabel>
-              <FormControl>
-                <Select
-                  onValueChange={field.onChange}
-                  value={field.value}
-                  defaultValue={field.value}
-                >
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select a request type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="New Request / Inquiry">
-                      New Request / Inquiry
-                    </SelectItem>
-                    <SelectItem value="Access Request">
-                      Access Request
-                    </SelectItem>
-                    <SelectItem value="Technical Issue / Bug Report">
-                      Technical Issue / Bug Report
-                    </SelectItem>
-                    <SelectItem value="Feedback / Suggestion">
-                      Feedback / Suggestion
-                    </SelectItem>
-                    <SelectItem value="Other">Other</SelectItem>
-                  </SelectContent>
-                </Select>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        {/* Message */}
-        <FormField
-          control={form.control}
-          name="message"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Message</FormLabel>
-              <FormControl>
-                <Textarea placeholder="Type your message..." {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
