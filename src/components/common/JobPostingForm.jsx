@@ -1,20 +1,8 @@
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-
 import { Textarea } from "@/components/ui/textarea";
-
 import { zodResolver } from "@hookform/resolvers/zod";
-
 import { useForm } from "react-hook-form";
-
 import { toast } from "sonner";
-
 import * as z from "zod";
 
 import {
@@ -27,41 +15,36 @@ import {
 } from "../ui/form/Form";
 
 import { Button } from "../ui/button/button";
+import { Spinner } from "../ui/shadcn-io/spinner";
 
+// 🔹 Schema for validation
 const formSchema = z.object({
-  full_name: z
+  company_name: z
     .string()
-    .min(2, { message: "Name must be at least 2 characters." }),
-  email_address: z
+    .min(2, { message: "Company name must be at least 2 characters." }),
+  company_description: z
     .string()
-    .or(z.literal(""))
-    .refine((val) => val === "" || val.includes("@"), {
-      message: "Please enter a valid email.",
-    }),
-  phone_number: z.string().optional().or(z.literal("")),
-  department: z.string().optional().or(z.literal("")),
-  request_type: z.string().optional().or(z.literal("")),
-  message: z
+    .min(10, { message: "Description must be at least 10 characters." }),
+  notification_email: z
     .string()
-    .min(5, { message: "Message must be at least 5 characters." }),
-  status: z.string().optional().or(z.literal("")),
-  priority: z.string().optional().or(z.literal("")),
-  summary: z.string().optional().or(z.literal("")),
+    .email({ message: "Please enter a valid email." }),
+  job_title: z
+    .string()
+    .min(2, { message: "Job title must be at least 2 characters." }),
+  job_requirements: z
+    .string()
+    .min(5, { message: "Requirements must be at least 5 characters." }),
 });
 
 export function JobPostingForm() {
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      full_name: "",
-      email_address: "",
-      message: "",
-      phone_number: "",
-      department: "",
-      request_type: "",
-      status: "",
-      priority: "",
-      summary: "",
+      company_name: "",
+      company_description: "",
+      notification_email: "",
+      job_title: "",
+      job_requirements: "",
     },
   });
 
@@ -82,10 +65,9 @@ export function JobPostingForm() {
     params.append("_ts", String(Date.now()));
 
     try {
-      // Use proxy in dev, direct URL in prod
       const baseUrl = import.meta.env.DEV
-        ? "/n8n/webhook/React-Contact-Form"
-        : "https://9452be38d7f5.ngrok-free.app/webhook/React-Contact-Form";
+        ? "/n8n/webhook/company-form"
+        : "https://75adf1d9ca7f.ngrok-free.app/webhook/company-form";
 
       const url = `${baseUrl}?${params.toString()}`;
       const response = await fetch(url, {
@@ -96,104 +78,133 @@ export function JobPostingForm() {
       });
 
       if (!response.ok) throw new Error(`Request failed: ${response.status}`);
-      toast.success("Work Flow Has Started!");
+
+      toast.success("Job Posting Submitted!");
+
+      // 🔹 Reset form fields
+      form.reset();
+
+      // 🔹 Navigate back to main page
+      window.history.pushState({}, "", "/");
+      window.dispatchEvent(new PopStateEvent("popstate"));
     } catch (error) {
       toast.error(`Error sending data: ${error.message}`);
     }
   };
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-        {/* Name */}
-
-        <FormField
-          control={form.control}
-          name="full_name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Name</FormLabel>
-              <FormControl>
-                <Input placeholder="John Doe" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        {/* Email */}
-        <FormField
-          control={form.control}
-          name="email_address"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Email</FormLabel>
-              <FormControl>
-                <Input type="email" placeholder="you@example.com" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        {/* Phone */}
-        <FormField
-          control={form.control}
-          name="phone_number"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Phone Number</FormLabel>
-              <FormControl>
-                <Input type="tel" placeholder="+92 300 1234567" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        {/* Department */}
-        <FormField
-          control={form.control}
-          name="department"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Department</FormLabel>
-              <FormControl>
-                <Select
-                  onValueChange={field.onChange}
-                  value={field.value}
-                  defaultValue={field.value}
-                >
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select a department" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="IT / Technical Support">
-                      IT / Technical Support
-                    </SelectItem>
-                    <SelectItem value="HR">HR</SelectItem>
-                    <SelectItem value="Finance & Accounts">
-                      Finance & Accounts
-                    </SelectItem>
-                    <SelectItem value="Marketing">Marketing</SelectItem>
-                    <SelectItem value="Sales">Sales</SelectItem>
-                    <SelectItem value="Customer Support">
-                      Customer Support
-                    </SelectItem>
-                    <SelectItem value="Legal">Legal</SelectItem>
-                    <SelectItem value="Admin">Admin</SelectItem>
-                  </SelectContent>
-                </Select>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <Button type="submit" className="cursor-pointer">
-          Send Message
-        </Button>
-      </form>
-    </Form>
+    <>
+      <h4 className="text-2xl font-bold bg-gradient-to-l from-[#5227FF] via-[#FF9FFC] to-[#B19EEF] bg-clip-text text-transparent mb-4">
+        Share Job Requirements
+      </h4>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          {/* Company Name */}
+          <FormField
+            control={form.control}
+            name="company_name"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Company Name</FormLabel>
+                <FormControl>
+                  <Input placeholder="OpenAI Inc." {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          {/* Company Description */}
+          <FormField
+            control={form.control}
+            name="company_description"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Company Description</FormLabel>
+                <FormControl>
+                  <Textarea
+                    placeholder="Describe your company briefly..."
+                    className="max-h-[200px] overflow-y-auto"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          {/* Notification Email */}
+          <FormField
+            control={form.control}
+            name="notification_email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Notification Email</FormLabel>
+                <FormControl>
+                  <Input type="email" placeholder="hr@company.com" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          {/* Job Title */}
+          <FormField
+            control={form.control}
+            name="job_title"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Job Title</FormLabel>
+                <FormControl>
+                  <Input placeholder="Software Engineer" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          {/* Job Requirements */}
+          <FormField
+            control={form.control}
+            name="job_requirements"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Job Requirements</FormLabel>
+                <FormControl>
+                  <Textarea
+                    placeholder="List required skills, qualifications..."
+                    className="max-h-[200px] overflow-y-auto"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          {/* Submit */}{" "}
+          <div className="flex gap-2 justify-end">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => {
+                window.history.pushState({}, "", "/");
+                window.dispatchEvent(new PopStateEvent("popstate"));
+              }}
+              className="cursor-pointer text-white ml-2"
+            >
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              disabled={form.formState.isSubmitting}
+              className="cursor-pointer bg-gradient-to-r from-[#6A0DAD] via-[#8E5DFF] to-[#C084FC] hover:scale-105 hover:shadow-lg text-white"
+            >
+              {form.formState.isSubmitting && (
+                <Spinner key="loading" variant="default" />
+              )}
+              {form.formState.isSubmitting
+                ? "Submitting..."
+                : "Submit Job Posting"}
+            </Button>
+          </div>
+        </form>
+      </Form>
+    </>
   );
 }
