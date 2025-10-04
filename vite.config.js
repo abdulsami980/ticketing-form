@@ -10,7 +10,7 @@ export default defineConfig({
     port: 5678,
     proxy: {
       "/n8n": {
-        target: "https://75adf1d9ca7f.ngrok-free.app",
+        target: "https://48654b02da74.ngrok-free.app",
         changeOrigin: true,
         secure: false,
         rewrite: (path) => path.replace(/^\/n8n/, ""),

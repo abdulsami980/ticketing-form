@@ -25,6 +25,7 @@ import {
 import { Button } from "../ui/button/button";
 import { supabase } from "@/supabase-client";
 import { useEffect, useState } from "react";
+import { Spinner } from "../ui/shadcn-io/spinner";
 
 // ✅ Schema
 const formSchema = z.object({
@@ -92,7 +93,7 @@ export function JobApplicationForm() {
     try {
       const baseUrl = import.meta.env.DEV
         ? "/n8n/webhook/candidate-form"
-        : "https://75adf1d9ca7f.ngrok-free.app/webhook/candidate-form";
+        : "https://48654b02da74.ngrok-free.app/webhook/candidate-form";
 
       const response = await fetch(baseUrl, {
         method: "POST",

@@ -67,7 +67,7 @@ export function JobPostingForm() {
     try {
       const baseUrl = import.meta.env.DEV
         ? "/n8n/webhook/company-form"
-        : "https://75adf1d9ca7f.ngrok-free.app/webhook/company-form";
+        : "https://48654b02da74.ngrok-free.app/webhook/company-form";
 
       const url = `${baseUrl}?${params.toString()}`;
       const response = await fetch(url, {
